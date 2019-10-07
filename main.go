@@ -14,16 +14,58 @@ import (
 type Runner struct {
 	// Exts is a slice of extensions
 	Exts []string
-	// Run constructs a slice of commands from a given file and temp exe path
-	Run func(file, tempExe string) []string
+	// Run constructs a slice of commands from a given file
+	Run func(file string) []string
 }
 
 var runners = []Runner{
 	{
 		[]string{"js"},
-		func(file, tempExe string) []string {
+		func(file string) []string {
 			return []string{
 				fmt.Sprintf("node %s", file),
+			}
+		},
+	},
+	{
+		[]string{"py"},
+		func(file string) []string {
+			return []string{
+				fmt.Sprintf("python %s", file),
+			}
+		},
+	},
+	{
+		[]string{"go"},
+		func(file string) []string {
+			return []string{
+				fmt.Sprintf("go run %s", file),
+			}
+		},
+	},
+	{
+		[]string{"bf"},
+		func(file string) []string {
+			return []string{
+				fmt.Sprintf("brainfuck %s", file),
+			}
+		},
+	},
+	{
+		[]string{"cpp"},
+		func(file string) []string {
+			return []string{
+				fmt.Sprintf("g++ %s -o abc123.exe", file),
+				"./abc123.exe",
+			}
+		},
+	},
+	{
+		[]string{"c"},
+		func(file string) []string {
+			return []string{
+				fmt.Sprintf("gcc %s -o abc123.exe", file),
+				"./abc123.exe",
 			}
 		},
 	},
@@ -51,7 +93,7 @@ func main() {
 		for _, runner := range runners {
 			for _, ex := range runner.Exts {
 				if ex == ext {
-					for _, command := range runner.Run(path, "") {
+					for _, command := range runner.Run(path) {
 						parts := strings.Fields(command)
 						cmd := exec.Command(parts[0], parts[1:]...)
 						cmd.Stdout = os.Stdout
