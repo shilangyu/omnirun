@@ -22,15 +22,25 @@ type Runner struct {
 	Run []string `json:"run"`
 }
 
+func runnersConfigPath() (string, error) {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	runnersPath := path.Join(configDir, "omnirun", "runners.json")
+
+	return runnersPath, nil
+}
+
 func loadRunners() ([]Runner, error) {
 	runners := []Runner{}
 
-	configDir, err := os.UserConfigDir()
+	runnersPath, err := runnersConfigPath()
 	if err != nil {
 		return nil, err
 	}
 
-	runnersPath := path.Join(configDir, "omnirun", "runners.json")
 	if _, err := os.Stat(runnersPath); os.IsNotExist(err) {
 		os.MkdirAll(filepath.Dir(runnersPath), 0644)
 		ioutil.WriteFile(runnersPath, []byte(runnersJSON), 0644)
@@ -52,8 +62,13 @@ func loadRunners() ([]Runner, error) {
 func main() {
 	var path string
 
-	runners, err := loadRunners()
+	if os.Args[1] == "config" {
+		p, _ := runnersConfigPath()
+		fmt.Println(p)
+		os.Exit(0)
+	}
 
+	runners, err := loadRunners()
 	if err != nil {
 		log.Fatalf("Failed to load runners.json: %s\n", err)
 	}
