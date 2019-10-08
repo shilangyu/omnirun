@@ -1,3 +1,7 @@
+package main
+
+// This is only a stringified json with some predefined runners
+var runnersJSON = `
 [
 	{
 		"exts": ["js"],
@@ -24,3 +28,4 @@
 		"run": ["gcc $or_file -o abc123.exe", "./abc123.exe"]
 	}
 ]
+`

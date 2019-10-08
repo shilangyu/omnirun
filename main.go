@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -24,7 +25,18 @@ type Runner struct {
 func loadRunners() ([]Runner, error) {
 	runners := []Runner{}
 
-	data, err := ioutil.ReadFile("runners.json")
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return nil, err
+	}
+
+	runnersPath := path.Join(configDir, "omnirun", "runners.json")
+	if _, err := os.Stat(runnersPath); os.IsNotExist(err) {
+		os.MkdirAll(filepath.Dir(runnersPath), 0644)
+		ioutil.WriteFile(runnersPath, []byte(runnersJSON), 0644)
+	}
+
+	data, err := ioutil.ReadFile(runnersPath)
 	if err != nil {
 		return nil, err
 	}
