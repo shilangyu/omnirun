@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -13,66 +15,36 @@ import (
 // Runner describes how to run a file
 type Runner struct {
 	// Exts is a slice of extensions
-	Exts []string
-	// Run constructs a slice of commands from a given file
-	Run func(file string) []string
+	Exts []string `json:"exts"`
+	// Run constructs a slice of commands.
+	// $or_file is the source file
+	Run []string `json:"run"`
 }
 
-var runners = []Runner{
-	{
-		[]string{"js"},
-		func(file string) []string {
-			return []string{
-				fmt.Sprintf("node %s", file),
-			}
-		},
-	},
-	{
-		[]string{"py"},
-		func(file string) []string {
-			return []string{
-				fmt.Sprintf("python %s", file),
-			}
-		},
-	},
-	{
-		[]string{"go"},
-		func(file string) []string {
-			return []string{
-				fmt.Sprintf("go run %s", file),
-			}
-		},
-	},
-	{
-		[]string{"bf"},
-		func(file string) []string {
-			return []string{
-				fmt.Sprintf("brainfuck %s", file),
-			}
-		},
-	},
-	{
-		[]string{"cpp"},
-		func(file string) []string {
-			return []string{
-				fmt.Sprintf("g++ %s -o abc123.exe", file),
-				"./abc123.exe",
-			}
-		},
-	},
-	{
-		[]string{"c"},
-		func(file string) []string {
-			return []string{
-				fmt.Sprintf("gcc %s -o abc123.exe", file),
-				"./abc123.exe",
-			}
-		},
-	},
+func loadRunners() ([]Runner, error) {
+	runners := []Runner{}
+
+	data, err := ioutil.ReadFile("runners.json")
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(data, &runners)
+	if err != nil {
+		return nil, err
+	}
+
+	return runners, nil
 }
 
 func main() {
 	var path string
+
+	runners, err := loadRunners()
+
+	if err != nil {
+		log.Fatalf("Failed to load runners.json: %s\n", err)
+	}
 
 	stat, _ := os.Stdin.Stat()
 	if (stat.Mode() & os.ModeCharDevice) == 0 {
@@ -93,7 +65,8 @@ func main() {
 		for _, runner := range runners {
 			for _, ex := range runner.Exts {
 				if ex == ext {
-					for _, command := range runner.Run(path) {
+					for _, command := range runner.Run {
+						command = strings.ReplaceAll(command, "$or_file", path)
 						parts := strings.Fields(command)
 						cmd := exec.Command(parts[0], parts[1:]...)
 						cmd.Stdout = os.Stdout
