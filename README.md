@@ -8,14 +8,28 @@ go get github.com/shilangyu/omnirun
 
 ---
 
+### run
+
+As arg:
+
 ```sh
 omnirun main.cpp
 ```
 
-```sh
-omnirun main.go
-```
+From stdin:
 
 ```sh
-omnirun main.js
+"main.cpp" | omnirun
 ```
+
+### config
+
+Edit config:
+
+```sh
+vim $(omnirun config)
+```
+
+- `exts`: array of extensions
+- `run`: array of commands to run:
+  - `$or_file`: path of the source file
