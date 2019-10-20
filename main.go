@@ -73,8 +73,7 @@ func main() {
 		log.Fatalf("Failed to load runners.json: %s\n", err)
 	}
 
-	stat, _ := os.Stdin.Stat()
-	if (stat.Mode() & os.ModeCharDevice) == 0 {
+	if os.Args[1] == "-" {
 		stdin := bufio.NewReader(os.Stdin)
 		text, _ := stdin.ReadString('\n')
 		path = strings.TrimSpace(text)
@@ -96,6 +95,7 @@ func main() {
 						command = strings.ReplaceAll(command, "$or_file", path)
 						parts := strings.Fields(command)
 						cmd := exec.Command(parts[0], parts[1:]...)
+						cmd.Stdin = os.Stdin
 						cmd.Stdout = os.Stdout
 						cmd.Stderr = os.Stderr
 						err := cmd.Run()

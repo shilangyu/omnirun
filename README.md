@@ -19,7 +19,7 @@ omnirun main.cpp
 From stdin:
 
 ```sh
-"main.cpp" | omnirun
+echo "main.cpp" | omnirun -
 ```
 
 ### config
