@@ -42,8 +42,8 @@ func loadRunners() ([]Runner, error) {
 	}
 
 	if _, err := os.Stat(runnersPath); os.IsNotExist(err) {
-		os.MkdirAll(filepath.Dir(runnersPath), 0644)
-		ioutil.WriteFile(runnersPath, []byte(runnersJSON), 0644)
+		os.MkdirAll(filepath.Dir(runnersPath), os.ModePerm)
+		ioutil.WriteFile(runnersPath, []byte(runnersJSON), os.ModePerm)
 	}
 
 	data, err := ioutil.ReadFile(runnersPath)
