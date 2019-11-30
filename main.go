@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
@@ -16,10 +16,10 @@ import (
 // Runner describes how to run a file
 type Runner struct {
 	// Exts is a slice of extensions
-	Exts []string `json:"exts"`
+	Exts []string `yaml:"exts"`
 	// Run constructs a slice of commands.
 	// $or_file is the source file
-	Run []string `json:"run"`
+	Run []string `yaml:"run"`
 }
 
 func runnersConfigPath() (string, error) {
@@ -28,7 +28,7 @@ func runnersConfigPath() (string, error) {
 		return "", err
 	}
 
-	runnersPath := path.Join(configDir, "omnirun", "runners.json")
+	runnersPath := path.Join(configDir, "omnirun", "runners.yaml")
 
 	return runnersPath, nil
 }
@@ -43,7 +43,8 @@ func loadRunners() ([]Runner, error) {
 
 	if _, err := os.Stat(runnersPath); os.IsNotExist(err) {
 		os.MkdirAll(filepath.Dir(runnersPath), os.ModePerm)
-		ioutil.WriteFile(runnersPath, []byte(runnersJSON), os.ModePerm)
+		d, _ := yaml.Marshal(&initialRunners)
+		ioutil.WriteFile(runnersPath, d, os.ModePerm)
 	}
 
 	data, err := ioutil.ReadFile(runnersPath)
@@ -51,7 +52,7 @@ func loadRunners() ([]Runner, error) {
 		return nil, err
 	}
 
-	err = json.Unmarshal(data, &runners)
+	err = yaml.Unmarshal(data, &runners)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +71,7 @@ func main() {
 
 	runners, err := loadRunners()
 	if err != nil {
-		log.Fatalf("Failed to load runners.json: %s\n", err)
+		log.Fatalf("Failed to load runners.yaml: %s\n", err)
 	}
 
 	if os.Args[1] == "-" {
