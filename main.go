@@ -16,7 +16,7 @@ import (
 // Runner describes how to run a file
 type Runner struct {
 	// Exts is a slice of extensions
-	Exts []string `yaml:"exts"`
+	Exts []string `yaml:"exts,flow"`
 	// Run constructs a slice of commands.
 	// $or_file is the source file
 	Run []string `yaml:"run"`
