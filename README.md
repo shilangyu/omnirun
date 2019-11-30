@@ -1,10 +1,14 @@
 # omnirun
 
+![](https://github.com/shilangyu/omnirun/workflows/ci/badge.svg)
+
 Run your source code directly
 
 ```sh
 go get github.com/shilangyu/omnirun
 ```
+
+Or get from [releases](https://github.com/shilangyu/omnirun/releases)
 
 ---
 
