@@ -1,6 +1,6 @@
 # omnirun
 
-![](https://github.com/shilangyu/omnirun/workflows/ci/badge.svg)
+[![](https://github.com/shilangyu/omnirun/workflows/ci/badge.svg)](https://github.com/shilangyu/omnirun/actions)
 
 Run your source code directly
 
