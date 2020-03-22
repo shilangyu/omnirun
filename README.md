@@ -2,7 +2,7 @@
 
 [![](https://github.com/shilangyu/omnirun/workflows/ci/badge.svg)](https://github.com/shilangyu/omnirun/actions)
 
-Run your source code directly
+Want to quickly run a single source file without having to remember the compilation steps?
 
 ```sh
 go get github.com/shilangyu/omnirun
@@ -18,6 +18,12 @@ As arg:
 
 ```sh
 omnirun main.cpp
+omnirun main.c
+omnirun main.rs
+omnirun main.js
+omnirun main.go
+omnirun main.fish
+omnirun main.py
 ```
 
 From stdin:
@@ -25,6 +31,8 @@ From stdin:
 ```sh
 echo "main.cpp" | omnirun -
 ```
+
+---
 
 ### config
 
@@ -37,3 +45,23 @@ vim $(omnirun config)
 - `exts`: array of extensions
 - `run`: array of commands to run:
   - `$or_file`: path of the source file
+
+---
+
+### included runners
+
+These are the presets, you can change them any time with [#config](#config)
+
+| file type | compiler/interpreter used                                   |
+| --------- | ----------------------------------------------------------- |
+| `js`      | [node](https://nodejs.org/en/)                              |
+| `py`      | [python](https://www.python.org/)                           |
+| `rs`      | [rustc](https://doc.rust-lang.org/rustc/what-is-rustc.html) |
+| `go`      | [go](https://golang.org/)                                   |
+| `bf`      | [brainfuck](https://github.com/shilangyu/brainfuck)         |
+| `c`       | [gcc](https://gcc.gnu.org/)                                 |
+| `cpp`     | [g++](https://gcc.gnu.org/)                                 |
+| `fish`    | [fish](http://fishshell.com/)                               |
+| `` | []   |
+| `` | []   |
+| `` | []   |

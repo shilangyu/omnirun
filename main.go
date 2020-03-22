@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -82,13 +81,18 @@ func main() {
 	}
 
 	if stat, err := os.Stat(fileToRun); os.IsNotExist(err) || stat.IsDir() {
-		fmt.Println("Provided path is not pointing to a file.")
+		errExitWith("Provided path is not pointing to a file.")
 	} else {
-		ext := filepath.Ext(fileToRun)[1:]
+		ext := filepath.Ext(fileToRun)
+		if ext != "" {
+			ext = ext[1:]
+		}
+		foundAny := false
 
 		for _, runner := range runners {
 			for _, ex := range runner.Exts {
 				if ex == ext {
+					foundAny = true
 					for _, command := range runner.Run {
 						command = strings.ReplaceAll(command, "$or_file", fileToRun)
 						parts := strings.Fields(command)
@@ -97,12 +101,14 @@ func main() {
 						cmd.Stdout = os.Stdout
 						cmd.Stderr = os.Stderr
 						err := cmd.Run()
-						if err != nil {
-							log.Fatalf("Failed to run the commands \"%s\": %s", command, err)
-						}
+						check(err, "Omnirun failed to run the following command: "+command)
 					}
 				}
 			}
+		}
+
+		if !foundAny {
+			errExitWith("Extension '" + ext + "' does not have a defined runner.")
 		}
 	}
 }
