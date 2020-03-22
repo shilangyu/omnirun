@@ -50,7 +50,7 @@ vim $(omnirun config)
 
 ### ✔ included runners
 
-These are the presets, you can change them any time with [#config](#config)
+These are the presets, you can change them any time with [#config](#%f0%9f%9b%a0%ef%b8%8f-config)
 
 | file type | compiler/interpreter used                                   |
 | --------- | ----------------------------------------------------------- |
