@@ -12,7 +12,7 @@ Or get from [releases](https://github.com/shilangyu/omnirun/releases)
 
 ---
 
-### run
+### ⇒ run
 
 As arg:
 
@@ -34,7 +34,7 @@ echo "main.cpp" | omnirun -
 
 ---
 
-### config
+### 🗉 config
 
 Edit config:
 
@@ -48,7 +48,7 @@ vim $(omnirun config)
 
 ---
 
-### included runners
+### ✔ included runners
 
 These are the presets, you can change them any time with [#config](#config)
 
@@ -62,6 +62,6 @@ These are the presets, you can change them any time with [#config](#config)
 | `c`       | [gcc](https://gcc.gnu.org/)                                 |
 | `cpp`     | [g++](https://gcc.gnu.org/)                                 |
 | `fish`    | [fish](http://fishshell.com/)                               |
-| `` | []   |
-| `` | []   |
-| `` | []   |
+| `ts`      | [ts-node](https://github.com/TypeStrong/ts-node)            |
+
+Gladly accepting PRs with new presets
