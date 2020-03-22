@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
@@ -11,6 +10,8 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Runner describes how to run a file
@@ -61,39 +62,35 @@ func loadRunners() ([]Runner, error) {
 }
 
 func main() {
-	var path string
+	runners, err := loadRunners()
+	check(err, "Failed to load runners")
 
-	if os.Args[1] == "config" {
+	var fileToRun string
+	action := parseArgs()
+
+	switch action {
+	case cmdActionConfig:
 		p, _ := runnersConfigPath()
 		fmt.Println(p)
 		os.Exit(0)
-	}
-
-	runners, err := loadRunners()
-	if err != nil {
-		log.Fatalf("Failed to load runners.yaml: %s\n", err)
-	}
-
-	if os.Args[1] == "-" {
+	case cmdActionFromStdin:
 		stdin := bufio.NewReader(os.Stdin)
 		text, _ := stdin.ReadString('\n')
-		path = strings.TrimSpace(text)
-	} else {
-		if len(os.Args) > 1 {
-			path = os.Args[1]
-		}
+		fileToRun = strings.TrimSpace(text)
+	case cmdActionFileInput:
+		fileToRun = os.Args[1]
 	}
 
-	if stat, err := os.Stat(path); os.IsNotExist(err) || stat.IsDir() {
+	if stat, err := os.Stat(fileToRun); os.IsNotExist(err) || stat.IsDir() {
 		fmt.Println("Provided path is not pointing to a file.")
 	} else {
-		ext := filepath.Ext(path)[1:]
+		ext := filepath.Ext(fileToRun)[1:]
 
 		for _, runner := range runners {
 			for _, ex := range runner.Exts {
 				if ex == ext {
 					for _, command := range runner.Run {
-						command = strings.ReplaceAll(command, "$or_file", path)
+						command = strings.ReplaceAll(command, "$or_file", fileToRun)
 						parts := strings.Fields(command)
 						cmd := exec.Command(parts[0], parts[1:]...)
 						cmd.Stdin = os.Stdin
