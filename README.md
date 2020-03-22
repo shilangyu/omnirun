@@ -34,7 +34,7 @@ echo "main.cpp" | omnirun -
 
 ---
 
-### 🗉 config
+### 🛠️ config
 
 Edit config:
 
