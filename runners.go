@@ -6,6 +6,8 @@ var initialRunners = []Runner{
 	{Exts: []string{"go"}, Run: []string{"go run $or_file"}},
 	{Exts: []string{"py"}, Run: []string{"python $or_file"}},
 	{Exts: []string{"bf"}, Run: []string{"brainfuck $or_file"}},
-	{Exts: []string{"cpp"}, Run: []string{"g++ $or_file -o abc123.exe", "./abc123.exe"}},
-	{Exts: []string{"c"}, Run: []string{"gcc $or_file -o abc123.exe", "./abc123.exe"}},
+	{Exts: []string{"cpp"}, Run: []string{"g++ $or_file -o a.exe", "./a.exe"}},
+	{Exts: []string{"c"}, Run: []string{"gcc $or_file -o a.exe", "./a.exe"}},
+	{Exts: []string{"rs"}, Run: []string{"rustc $or_file -o a.exe", "./a.exe"}},
+	{Exts: []string{"fish"}, Run: []string{"fish $or_file"}},
 }
