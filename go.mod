@@ -2,4 +2,4 @@ module github.com/shilangyu/omnirun
 
 go 1.13
 
-require gopkg.in/yaml.v2 v2.2.8
+require gopkg.in/yaml.v2 v2.3.0
